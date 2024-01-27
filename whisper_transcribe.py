@@ -47,6 +47,6 @@ sample = dataset[0]["audio"]
 # it can be passed as an argument to the pipeline:
 # result = pipe(sample, generate_kwargs={"language": "english"})
 
-
-result = pipe(sample, return_timestamps=False)
+inp_file = None
+result = pipe(inp_file, return_timestamps=False)
 print(result["text"])
