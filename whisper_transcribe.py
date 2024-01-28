@@ -1,6 +1,8 @@
 # pip install --upgrade pip
 # pip install --upgrade git+https://github.com/huggingface/transformers.git accelerate datasets[audio]
 
+# install ffmpeg if needed
+
 import torch
 from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor, pipeline
 from datasets import load_dataset
@@ -36,17 +38,11 @@ pipe = pipeline(
     device=device,
 )
 
-dataset = load_dataset("distil-whisper/librispeech_long", "clean", split="validation")
-sample = dataset[0]["audio"]
 
-# To transcribe a local audio file, simply pass the path to your audio file when you call the pipeline:
-# - result = pipe(sample)
-# + result = pipe("audio.mp3")
 
-# Whisper predicts the language of the source audio automatically. If the source audio language is known a-priori,
-# it can be passed as an argument to the pipeline:
-# result = pipe(sample, generate_kwargs={"language": "english"})
+inp_file = "audio.mp3"
 
-inp_file = None
-result = pipe(inp_file, return_timestamps=False)
+result = pipe(inp_file, return_timestamps=True, generate_kwargs={"language": "english", "task": "translate"})
+
 print(result["text"])
+# print(result["chunks"])

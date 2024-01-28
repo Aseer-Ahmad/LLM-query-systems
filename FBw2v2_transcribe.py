@@ -12,7 +12,7 @@ def load_data(input_file):
         speech = speech[:,0] + speech[:,1]
     #Resampling the audio at 16KHz
     if sample_rate !=16000:
-        speech = librosa.resample(speech, sample_rate,16000)
+        speech = librosa.resample(speech, orig_sr = sample_rate,target_sr = 16000)
     
     return speech
 
@@ -30,7 +30,7 @@ model = Wav2Vec2ForCTC.from_pretrained("facebook/wav2vec2-base-960h")
 
 # tokenize
 # input_values = processor(ds[0]["audio"]["array"], return_tensors="pt", padding="longest").input_values  # Batch size 1
-inp_file = None
+inp_file = 'audio.mp3'
 speech = load_data(inp_file)
 input_values = tokenizer(speech, return_tensors="pt").input_values
 
@@ -43,3 +43,4 @@ transcription = tokenizer.decode(predicted_ids)
 
 #Correcting the letter casing
 transcription = correct_casing(transcription.lower())
+print(transcription)
