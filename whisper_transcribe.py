@@ -6,6 +6,18 @@
 import torch
 from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor, pipeline
 from datasets import load_dataset
+from pytube import YouTube, Channel
+import pandas as pd
+
+df = pd.read_csv(r'C:\Users\Aseer\Desktop\naqshiSaar\SHAAAMD_q(1).csv' )
+video_url_list  = df.loc[: , 'video_urls']
+df['trans'] = None
+
+count = 1
+for url in video_url_list:
+    path = YouTube(url).streams.filter(only_audio=True)[0].download(filename=f"audio_{i}.mp3")
+    print(f'audio download at : {path}')
+    count+=1
 
 
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
@@ -40,9 +52,9 @@ pipe = pipeline(
 
 
 
-inp_file = "audio.mp3"
-
-result = pipe(inp_file, return_timestamps=True, generate_kwargs={"language": "english", "task": "translate"})
+for i in range(count):
+    inp_file = f"./audio_{i}.mp3"
+    result = pipe(inp_file, return_timestamps=True, generate_kwargs={"language": "english", "task": "translate"})
 
 print(result["text"])
 # print(result["chunks"])
